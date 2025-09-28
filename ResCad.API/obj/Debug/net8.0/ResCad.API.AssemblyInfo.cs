@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ResCad.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+839c71538f85072625b55eb4d994da01de597a39")]
 [assembly: System.Reflection.AssemblyProductAttribute("ResCad.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ResCad.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

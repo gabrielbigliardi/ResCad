@@ -1,22 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
+using ResCad.Application.Interfaces;
+using ResCad.Dominio.Dtos;
 
 namespace ResCad.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController(
+            ILogger<WeatherForecastController> logger,
+
+            IResidentesAplService residentesAplService
+        ) : ControllerBase
     {
+        private readonly IResidentesAplService _residentesAplService = residentesAplService;
+        private readonly ILogger<WeatherForecastController> _logger = logger;
+
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
 
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
@@ -28,6 +30,14 @@ namespace ResCad.API.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+
+        [HttpGet("residentes")]
+        public async Task<ActionResult<ResidentesDto>> GetAll()
+        {
+            var residentes = await _residentesAplService.GetAllResidentes();
+            return Ok(residentes);
         }
     }
 }
