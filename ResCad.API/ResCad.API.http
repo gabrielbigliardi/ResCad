@@ -1,6 +1,6 @@
 @ResCad.API_HostAddress = http://localhost:5138
 
-GET {{ResCad.API_HostAddress}}/weatherforecast/
+GET {{ResCad.API_HostAddress}}/residentes/
 Accept: application/json
 
 ###

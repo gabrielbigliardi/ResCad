@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResCad.Dominio", "ResCad.Do
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResCad.Application", "ResCad.Application\ResCad.Application.csproj", "{3623F86A-0178-4EC6-902E-6F72011C1D8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResCad.Web", "ResCad.Web\ResCad.Web.csproj", "{57A98394-6162-4A3D-A7E0-F7AA93F0E55D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{3623F86A-0178-4EC6-902E-6F72011C1D8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3623F86A-0178-4EC6-902E-6F72011C1D8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3623F86A-0178-4EC6-902E-6F72011C1D8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57A98394-6162-4A3D-A7E0-F7AA93F0E55D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57A98394-6162-4A3D-A7E0-F7AA93F0E55D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57A98394-6162-4A3D-A7E0-F7AA93F0E55D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57A98394-6162-4A3D-A7E0-F7AA93F0E55D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +69,7 @@ Global
 		{587B247E-FDA4-4491-9B8D-1D13160C0A9B} = {AD00ED49-06DD-4569-B8BF-2B511713F01A}
 		{64A8F8AD-47B4-4ECE-B63A-CB49934501FD} = {6D27A422-6798-4F09-A38B-28D0760EB8C6}
 		{3623F86A-0178-4EC6-902E-6F72011C1D8A} = {F5A9DCC3-26C7-4134-85D7-DBC2DAFCB50E}
+		{57A98394-6162-4A3D-A7E0-F7AA93F0E55D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CD86D3F6-8AEF-4BE7-A435-AD62FEA82418}

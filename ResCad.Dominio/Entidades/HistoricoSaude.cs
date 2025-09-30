@@ -4,7 +4,7 @@ using Supabase.Postgrest.Attributes;
 [Table("rescad_hist_saude")]
 public class HistoricoSaude : BaseModel
 {
-    [PrimaryKey("cod_hist_saude", true)]
+    [PrimaryKey("cod_hist_saude", false)]
     public int CodHistSaude { get; set; }
 
     [Column("condicoes_medicas")]

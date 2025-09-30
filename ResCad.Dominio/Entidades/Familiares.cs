@@ -4,7 +4,7 @@ using Supabase.Postgrest.Attributes;
 [Table("rescad_familiares")]
 public class Familiares : BaseModel
 {
-    [PrimaryKey("cod_familiar", true)]
+    [PrimaryKey("cod_familiar", false)]
     public int CodFamiliar { get; set; }
 
     [Column("nome")]

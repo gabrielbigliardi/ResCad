@@ -1,0 +1,129 @@
+﻿@page "/consulta"
+@using MudBlazor
+@inject ResidentesAPI _residentesAPI
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="my-6">
+    <MudText Typo="Typo.h4" Class="mb-4">Consulta de Residentes</MudText>
+
+    @if (residentes == null)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudItem>
+                <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+                <MudText>Carregando residentes...</MudText>
+            </MudItem>
+        </MudGrid>
+    }
+    else if (!residentes.Any())
+    {
+        <MudAlert Severity="Severity.Warning">
+            <MudText>Nenhum residente encontrado.</MudText>
+        </MudAlert>
+    }
+    else
+    {
+        <MudCard>
+            <MudCardContent>
+                <MudTable Items="@residentes" Hover="true" Striped="true" Breakpoint="Breakpoint.Sm">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Lista de Residentes</MudText>
+                        <MudSpacer />
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Add"
+                                   Href="/cadastro">
+                            Novo Residente
+                        </MudButton>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>ID</MudTh>
+                        <MudTh>Nome Completo</MudTh>
+                        <MudTh>Data Nascimento</MudTh>
+                        <MudTh>Data Entrada</MudTh>
+                        <MudTh>Status</MudTh>
+                        <MudTh>Ações</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.Id</MudTd>
+                        <MudTd>@context.NomeCompleto</MudTd>
+                        <MudTd>@context.DataNascimento?.ToString("dd/MM/yyyy")</MudTd>
+                        <MudTd>@context.DataEntrada?.ToString("dd/MM/yyyy")</MudTd>
+                        <MudTd DataLabel="Status">
+                            @if (context.Ativo)
+                            {
+                                <MudBadge Color="Color.Success" Variant="Variant.Filled" Size="Size.Small">
+                                    Ativo
+                                </MudBadge>
+                            }
+                            else
+                            {
+                                <MudBadge Color="Color.Default" Variant="Variant.Filled" Size="Size.Small">
+                                    Inativo
+                                </MudBadge>
+                            }
+                        </MudTd>
+                        <MudTd>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                           Color="Color.Primary"
+                                           Size="Size.Small"
+                                           Href="@($"cadastro/{context.Id}")" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           Color="Color.Error"
+                                           Size="Size.Small"
+                                           OnClick="() => DeletarResidente(context)" />
+                        </MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudText Typo="Typo.caption">
+                            Total: @residentes.Count residentes
+                        </MudText>
+                    </PagerContent>
+                </MudTable>
+            </MudCardContent>
+        </MudCard>
+    }
+</MudContainer>
+
+@code {
+    private ICollection<ResidentesDto>? residentes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarResidentes();
+    }
+
+    private async Task CarregarResidentes()
+    {
+        try
+        {
+            residentes = await _residentesAPI.GetResidentesAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro ao carregar residentes: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task DeletarResidente(ResidentesDto residente)
+    {
+        try
+        {
+            var sucesso = await _residentesAPI.DeleteResidenteAsync(residente.Id);
+            if (sucesso)
+            {
+                Snackbar.Add($"Residente {residente.NomeCompleto} excluído com sucesso!", Severity.Success);
+                await CarregarResidentes();
+            }
+            else
+            {
+                Snackbar.Add($"Erro ao excluir residente", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Erro: {ex.Message}", Severity.Error);
+        }
+    }
+}

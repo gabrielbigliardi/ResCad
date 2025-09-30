@@ -4,7 +4,7 @@ using Supabase.Postgrest.Attributes;
 [Table("rescad_residentes")]
 public class Residentes : BaseModel
 {
-    [PrimaryKey("cod_residente", true)]
+    [PrimaryKey("cod_residente", false)]
     public int CodResidente { get; set; }
 
     [Column("nome_completo")]
@@ -42,8 +42,8 @@ public class Residentes : BaseModel
 
     // Para relacionamentos, usamos Reference do Supabase
     [Reference(typeof(Familiares))]
-    public List<Familiares> Familiares { get; set; } = new List<Familiares>();
+    public List<Familiares>? Familiares { get; set; } = new List<Familiares>();
 
     [Reference(typeof(HistoricoSaude))]
-    public List<HistoricoSaude> HistoricosSaude { get; set; } = new List<HistoricoSaude>();
+    public List<HistoricoSaude>? HistoricosSaude { get; set; } = new List<HistoricoSaude>();
 }

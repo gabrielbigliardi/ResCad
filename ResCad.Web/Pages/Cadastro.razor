@@ -1,0 +1,335 @@
+﻿@page "/cadastro"
+@page "/cadastro/{Id:int}"
+@using MudBlazor
+@inject ResidentesAPI _residentesAPI
+@inject NavigationManager Navigation
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="my-6">
+
+    <MudText Typo="Typo.h4" Class="mb-6 text-center">
+        @(Id == 0 ? "Cadastro de Residente" : "Editar Residente")
+    </MudText>
+
+    <MudForm @ref="form" Model="residente">
+
+        <!-- SEÇÃO 1: DADOS DO RESIDENTE -->
+        <MudPaper Class="px-6 py-4 mb-6" Elevation="1">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.Person" Class="mr-2" />
+                Dados do Residente
+            </MudText>
+
+            <MudGrid>
+                <!-- Nome Completo -->
+                <MudItem xs="12">
+                    <MudTextField T="string" @bind-Value="residente.NomeCompleto"
+                                  Label="Nome Completo *"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="Nome completo é obrigatório"
+                                  For="@(() => residente.NomeCompleto)" />
+                </MudItem>
+
+                <!-- Documento e Data Nascimento -->
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" @bind-Value="residente.NumeroDocumento"
+                                  Label="Número do Documento *"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="Documento é obrigatório"
+                                  For="@(() => residente.NumeroDocumento)" />
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudDatePicker @bind-Date="residente.DataNascimento"
+                                   Label="Data de Nascimento *"
+                                   Variant="Variant.Outlined" />
+                </MudItem>
+
+                <!-- Gênero e Estado Civil -->
+                <MudItem xs="12" md="6">
+                    <MudSelect T="string" @bind-Value="residente.Genero"
+                               Label="Gênero *"
+                               Variant="Variant.Outlined"
+                               Required="true"
+                               RequiredError="Selecione o gênero"
+                               For="@(() => residente.Genero)">
+                        <MudSelectItem T="string" Value="@("Masculino")">Masculino</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Feminino")">Feminino</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Outro")">Outro</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudSelect T="string" @bind-Value="residente.EstadoCivil"
+                               Label="Estado Civil *"
+                               Variant="Variant.Outlined"
+                               Required="true"
+                               RequiredError="Selecione o estado civil"
+                               For="@(() => residente.EstadoCivil)">
+                        <MudSelectItem T="string" Value="@("Solteiro")">Solteiro(a)</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Casado")">Casado(a)</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Divorciado")">Divorciado(a)</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Viúvo")">Viúvo(a)</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Separado")">Separado(a)</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <!-- Telefone de Contato -->
+                <MudItem xs="12">
+                    <MudTextField T="string" @bind-Value="residente.TelefoneContato"
+                                  Label="Telefone de Contato"
+                                  Variant="Variant.Outlined"
+                                  Placeholder="(00) 00000-0000" />
+                </MudItem>
+
+                <!-- Data Entrada e Status -->
+                <MudItem xs="12" md="6">
+                    <MudDatePicker @bind-Date="residente.DataEntrada"
+                                   Label="Data de Entrada"
+                                   Variant="Variant.Outlined"
+                                   Disabled="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="6" Class="d-flex align-center">
+                    <MudCheckBox T="bool" @bind-Checked="residente.Ativo"
+                                 Label="Residente Ativo"
+                                 Color="Color.Primary" />
+                </MudItem>
+
+                <!-- Data de Saída (condicional) -->
+                @if (!residente.Ativo)
+                {
+                    <MudItem xs="12">
+                        <MudDatePicker @bind-Date="residente.DataSaida"
+                                       Label="Data de Saída"
+                                       Variant="Variant.Outlined" />
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudPaper>
+
+        <!-- SEÇÃO 2: FAMILIARES -->
+        <MudPaper Class="px-6 py-4 mb-6" Elevation="1">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.FamilyRestroom" Class="mr-2" />
+                Familiares
+            </MudText>
+
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" @bind-Value="residente.Familiares[0].Nome"
+                                  Label="Nome do Familiar *"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="Nome do familiar é obrigatório" />
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudSelect T="string" @bind-Value="residente.Familiares[0].Parentesco"
+                               Label="Parentesco *"
+                               Variant="Variant.Outlined"
+                               Required="true"
+                               RequiredError="Selecione o parentesco">
+                        <MudSelectItem T="string" Value="@("Pai")">Pai</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Mãe")">Mãe</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Filho")">Filho(a)</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Cônjuge")">Cônjuge</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Irmão")">Irmão(ã)</MudSelectItem>
+                        <MudSelectItem T="string" Value="@("Outro")">Outro</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" @bind-Value="residente.Familiares[0].Telefone"
+                                  Label="Telefone"
+                                  Variant="Variant.Outlined"
+                                  Placeholder="(00) 00000-0000" />
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" @bind-Value="residente.Familiares[0].Email"
+                                  Label="Email"
+                                  Variant="Variant.Outlined"
+                                  Placeholder="email@exemplo.com" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        <!-- SEÇÃO 3: HISTÓRICO DE SAÚDE -->
+        <MudPaper Class="px-6 py-4 mb-6" Elevation="1">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.MedicalServices" Class="mr-2" />
+                Histórico de Saúde
+            </MudText>
+
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField T="string" @bind-Value="residente.HistoricosSaude[0].CondicoesMedicas"
+                                  Label="Condições Médicas"
+                                  Variant="Variant.Outlined"
+                                  Lines="3"
+                                  Placeholder="Descreva as condições médicas existentes" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField T="string" @bind-Value="residente.HistoricosSaude[0].Medicamentos"
+                                  Label="Medicamentos em Uso"
+                                  Variant="Variant.Outlined"
+                                  Lines="3"
+                                  Placeholder="Liste os medicamentos em uso regular" />
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" @bind-Value="residente.HistoricosSaude[0].Alergias"
+                                  Label="Alergias"
+                                  Variant="Variant.Outlined"
+                                  Lines="2"
+                                  Placeholder="Liste as alergias conhecidas" />
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" @bind-Value="residente.HistoricosSaude[0].RestricoesAlimentares"
+                                  Label="Restrições Alimentares"
+                                  Variant="Variant.Outlined"
+                                  Lines="2"
+                                  Placeholder="Descreva restrições alimentares" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudDatePicker @bind-Date="residente.HistoricosSaude[0].DataRegistro"
+                                   Label="Data do Registro"
+                                   Variant="Variant.Outlined"
+                                   Disabled="true" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        <!-- BOTÕES DE AÇÃO -->
+        <div class="d-flex justify-space-between mt-6">
+            <MudButton Variant="Variant.Text"
+                       Color="Color.Default"
+                       StartIcon="@Icons.Material.Filled.ArrowBack"
+                       Href="/consulta">
+                Voltar
+            </MudButton>
+
+            <div>
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Default"
+                           Class="mr-3"
+                           OnClick="LimparFormulario">
+                    Limpar
+                </MudButton>
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Save"
+                           OnClick="SalvarResidente"
+                           Disabled="form?.IsValid != true">
+                    @(Id == 0 ? "Cadastrar" : "Atualizar")
+                </MudButton>
+            </div>
+        </div>
+
+    </MudForm>
+
+</MudContainer>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ResidentesDto residente = new();
+    private MudForm? form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            await CarregarResidente();
+        }
+        else
+        {
+            // Inicializar com um familiar e um histórico vazios
+            residente.DataEntrada = DateTime.Now;
+            residente.Ativo = true;
+            residente.Familiares = new List<FamiliaresDto> { new FamiliaresDto() };
+            residente.HistoricosSaude = new List<HistoricoSaudeDto> { new HistoricoSaudeDto
+            {
+                DataRegistro = DateTime.Now
+            }};
+        }
+    }
+
+    private async Task CarregarResidente()
+    {
+        try
+        {
+            var residentes = await _residentesAPI.GetResidentesAsync();
+            var residenteCarregado = residentes?.FirstOrDefault(r => r.Id == Id) ?? new ResidentesDto();
+
+            // Garantir que sempre tenha pelo menos um familiar e um histórico
+            residenteCarregado.Familiares ??= new List<FamiliaresDto> { new FamiliaresDto() };
+            residenteCarregado.HistoricosSaude ??= new List<HistoricoSaudeDto> { new HistoricoSaudeDto
+            {
+                DataRegistro = DateTime.Now
+            }};
+
+            residente = residenteCarregado;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar residente: {ex.Message}");
+        }
+    }
+
+    private async Task SalvarResidente()
+    {
+        if (form == null) return;
+
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            try
+            {
+                if (Id == 0)
+                {
+                    // MODO CADASTRO - Criar novo residente
+                    await _residentesAPI.CreateResidenteAsync(residente);
+                }
+                else
+                {
+                    // MODO EDIÇÃO - Atualizar residente existente
+                    await _residentesAPI.UpdateResidenteAsync(residente);
+                }
+
+                // Redirecionar para a lista após salvar
+                Navigation.NavigateTo("/consulta");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao salvar residente: {ex.Message}");
+            }
+        }
+    }
+
+    private void LimparFormulario()
+    {
+        if (Id == 0)
+        {
+            residente = new ResidentesDto
+            {
+                DataEntrada = DateTime.Now,
+                Ativo = true,
+                Familiares = new List<FamiliaresDto> { new FamiliaresDto() },
+                HistoricosSaude = new List<HistoricoSaudeDto> { new HistoricoSaudeDto
+                {
+                    DataRegistro = DateTime.Now
+                }}
+            };
+            form?.ResetValidation();
+        }
+    }
+}
